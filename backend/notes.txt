@@ -1,0 +1,8 @@
+npm init -y
+
+npm i express nodemon cors dotenv mongoose 
+
+npm i mongoose@5.2.1
+
+
+
