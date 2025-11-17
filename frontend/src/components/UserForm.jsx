@@ -1,15 +1,27 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router';
 
 const UserForm = () => {
     const [form, setForm] = useState({ name: "", email: "", age: "" });
-
+    const navigate = useNavigate()
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
-        alert(JSON.stringify(form))
+        // alert(JSON.stringify(form))
+        try{
+            await fetch("http://localhost:5000/api/save",
+                {
+                    method:"POST",
+                    headers:{'content-type':'application/json'},
+                    body:JSON.stringify(form)
+                }
+            )
+            navigate("/view")
+        }
+        catch(err){console.log(err)}
     }
 
     return (

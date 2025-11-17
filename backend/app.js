@@ -2,8 +2,10 @@ import express from 'express'
 import 'dotenv/config'
 import userRoute from './routes/userRoute.js'
 import mongoose from 'mongoose'
+import cors from 'cors'
 const server = express()
 server.use(express.json())
+server.use(cors())
 
 const connectDB=async()=>{
     try{
