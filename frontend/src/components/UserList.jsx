@@ -27,9 +27,11 @@ const handleDelete = async(id)=>{
 //search
 const [search,setSearch] = useState("")
 const [sortType,setSortType] = useState("")
+const [filter,setFilter] = useState("")
 
-const filterUsers = users.filter((user)=>user.name.toLowerCase().includes(search.toLowerCase()))
-.sort((a,b)=>{
+let filterUsers = users.filter((user)=>user.name.toLowerCase().includes(search.toLowerCase())) //search
+.filter((user)=>filter ? user.age==filter : true) //filter by age
+.sort((a,b)=>{ //sort by name and age
   if(sortType=="atoz") {return a.name.localeCompare(b.name)}
   if(sortType=="ztoa") {return b.name.localeCompare(a.name)}
   if(sortType=="ltoh") {return a.age - b.age}
@@ -40,6 +42,21 @@ const filterUsers = users.filter((user)=>user.name.toLowerCase().includes(search
 // users.sort((a,b)=>a-b) //asending
 // users.sort((a,b)=>b-a) //desending
 
+//search with button
+const [searchBtn,setSearchBtn] = useState("")
+const handleSearch=  async()=>{
+  try{
+          const res = await fetch("http://localhost:5000/api")
+          const data =await res.json()
+          if(data.length>0){
+            let searchUsers = data.filter((u)=>u.name.toLowerCase().includes(searchBtn.toLowerCase()))
+            setUsers([...searchUsers])
+          }
+        }
+        catch(err){console.log(err)}
+}
+
+////////////////////
 
   return (
     <div>
@@ -54,8 +71,16 @@ const filterUsers = users.filter((user)=>user.name.toLowerCase().includes(search
         <option value="ltoh">Age (Ascending)</option>
         <option value="htol">Age (Decending)</option>
       </select>    
+      &emsp;
+       <input placeholder='filter by age' 
+      value={filter} onChange={(e)=>setFilter(e.target.value)} />
       
-      <br/>
+      <br/><br/>
+
+      <label>Search By Name</label>
+       <input placeholder='search by name' 
+      value={searchBtn} onChange={(e)=>setSearchBtn(e.target.value)} />
+      <button onClick={handleSearch}>Search</button>
 
       <h3>User List</h3>
       <table border="1" cellSpacing={0}>
